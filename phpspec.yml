@@ -1,0 +1,4 @@
+formatter.name: pretty
+suites:
+  idempotent_module:
+    namespace: Riskio\IdempotencyModule

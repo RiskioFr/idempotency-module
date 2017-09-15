@@ -1,0 +1,39 @@
+{
+    "name": "riskio/idempotency-module",
+    "description": "Zend Framework module ensuring at most once requests for mutating endpoints.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "idempotency",
+        "http",
+        "request"
+    ],
+    "homepage": "https://github.com/RiskioFr/idempotency-module",
+    "authors": [
+        {
+            "name": "Nicolas Eeckeloo",
+            "email": "neeckeloo@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "psr/cache": "^1.0",
+        "symfony/cache": "^3.3",
+        "zendframework/zend-diactoros": "^1.6",
+        "zendframework/zend-eventmanager": "^3.2",
+        "zendframework/zend-http": "^2.6",
+        "zendframework/zend-mvc": "^3.1",
+        "zendframework/zend-psr7bridge": "^1.0",
+        "zendframework/zend-stdlib": "^3.1",
+        "zendframework/zend-validator": "^2.10"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "^1.7.1",
+        "phpspec/phpspec": "^4.0.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Riskio\\IdempotencyModule\\": "src/"
+        }
+    }
+}
