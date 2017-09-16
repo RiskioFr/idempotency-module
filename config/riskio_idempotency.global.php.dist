@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * This is the config file for Riskio\IdempotencyModule. Just drop this file into your config/autoload folder (don't
+ * forget to remove the .dist extension from the file), and configure it as you want.
+ */
+
+use Symfony\Component\Cache\Adapter\NullAdapter as NullCacheAdapter;
+use Riskio\IdempotencyModule\Serializer\Serializer;
+use Zend\Validator\NotEmpty as NotEmptyValidator;
+
+return [
+    'riskio_idempotency' => [
+        /**
+         * Allow to configure PSR-6 cache implementation.
+         */
+        'cache' => NullCacheAdapter::class,
+
+        /**
+         * Allow to configure serializer that serializes/unserializes cached data.
+         */
+        'serializer' => Serializer::class,
+
+        /**
+         * Allow to configure validator that validates idempotent key format.
+         */
+        'idempotent_key_validator' => NotEmptyValidator::class,
+    ],
+];

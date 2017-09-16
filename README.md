@@ -31,7 +31,11 @@ You can install the module from command line:
 $ php composer.phar require riskio/idempotency-module
 ```
 
-Enable the module by adding `Riskio\IdempotencyModule` key to your `application.config.php` file.
+After installation of the package, you need to complete the following steps:
+
+ 1. Enable the module by adding `Riskio\IdempotencyModule` in your `application.config.php` file.
+ 2. Copy the `riskio_idempotency.global.php.dist` (you can find this file in the `config` folder of the module) into
+your `config/autoload` folder and apply any setting you want.
 
 Default configuration
 ---------------------
