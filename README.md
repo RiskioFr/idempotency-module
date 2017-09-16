@@ -3,9 +3,10 @@ Idempotency module for Zend Framework
 
 Zend Framework module ensuring at most once requests for mutating endpoints.
 
-[![Build Status](https://img.shields.io/travis/RiskioFr/idempotency-module.svg?style=flat)](http://travis-ci.org/RiskioFr/idempotency-module)
-[![Latest Stable Version](http://img.shields.io/packagist/v/riskio/idempotency-module.svg?style=flat)](https://packagist.org/packages/riskio/idempotency-module)
-[![Total Downloads](http://img.shields.io/packagist/dt/riskio/idempotency-module.svg?style=flat)](https://packagist.org/packages/riskio/idempotency-module)
+[![Latest Stable Version](http://img.shields.io/packagist/v/riskio/idempotency-module.svg?style=flat-square)](https://packagist.org/packages/riskio/idempotency-module)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Build Status](https://img.shields.io/travis/RiskioFr/idempotency-module.svg?style=flat-square)](http://travis-ci.org/RiskioFr/idempotency-module)
+[![Total Downloads](http://img.shields.io/packagist/dt/riskio/idempotency-module.svg?style=flat-square)](https://packagist.org/packages/riskio/idempotency-module)
 
 Requirements
 ------------
