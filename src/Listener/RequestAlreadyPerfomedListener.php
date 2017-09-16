@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Riskio\IdempotencyModule;
+namespace Riskio\IdempotencyModule\Listener;
 
 use Riskio\IdempotencyModule\Exception\ExceptionInterface;
 use Riskio\IdempotencyModule\Exception\InvalidIdempotencyKeyFormatException;
 use Riskio\IdempotencyModule\Exception\InvalidRequestChecksumException;
-use Riskio\IdempotencyModule\Exception\NoIdempotencyKeyException;
+use Riskio\IdempotencyModule\IdempotencyService;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Request as HttpRequest;
@@ -14,7 +14,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Psr7Bridge\Psr7Response;
 use Zend\Psr7Bridge\Psr7ServerRequest;
 
-class IdempotentRequestListener extends AbstractListenerAggregate
+class RequestAlreadyPerfomedListener extends AbstractListenerAggregate
 {
     private $idempotencyService;
 
@@ -23,21 +23,12 @@ class IdempotentRequestListener extends AbstractListenerAggregate
         $this->idempotencyService = $idempotencyService;
     }
 
-    public function attach(EventManagerInterface $events, $priority = 1)
+    public function attach(EventManagerInterface $events, $priority = -50)
     {
-        $this->listeners[] = $events->attach(
-            MvcEvent::EVENT_ROUTE,
-            [$this, 'loadResponse'],
-            -50
-        );
-        $this->listeners[] = $events->attach(
-            MvcEvent::EVENT_FINISH,
-            [$this, 'saveResponse'],
-            -100
-        );
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, $this, $priority);
     }
 
-    public function loadResponse(MvcEvent $event)
+    public function __invoke(MvcEvent $event)
     {
         $request = $event->getRequest();
         if (!$request instanceof HttpRequest) {
@@ -63,23 +54,6 @@ class IdempotentRequestListener extends AbstractListenerAggregate
         }
 
         return Psr7Response::toZend($psrResponse);
-    }
-
-    public function saveResponse(MvcEvent $event)
-    {
-        $request = $event->getRequest();
-        if (!$request instanceof HttpRequest) {
-            return;
-        }
-
-        try {
-            $this->idempotencyService->save(
-                Psr7ServerRequest::fromZend($event->getRequest()),
-                Psr7Response::fromZend($event->getResponse())
-            );
-        } catch (NoIdempotencyKeyException $event) {
-            return;
-        }
     }
 
     private function triggerDispatchErrorEvent(MvcEvent $event)

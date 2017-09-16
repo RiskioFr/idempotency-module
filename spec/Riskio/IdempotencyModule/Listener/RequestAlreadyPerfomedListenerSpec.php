@@ -1,15 +1,14 @@
 <?php
 
-namespace spec\Riskio\IdempotencyModule;
+namespace spec\Riskio\IdempotencyModule\Listener;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Psr\Http\Message\ResponseInterface as PsrResponse;
 use Riskio\IdempotencyModule\Exception\InvalidIdempotencyKeyFormatException;
 use Riskio\IdempotencyModule\Exception\InvalidRequestChecksumException;
 use Riskio\IdempotencyModule\Exception\RuntimeException;
-use Riskio\IdempotencyModule\IdempotentRequestListener;
 use Riskio\IdempotencyModule\IdempotencyService;
+use Riskio\IdempotencyModule\Listener\RequestAlreadyPerfomedListener;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Response\EmptyResponse as DiactorosResponse;
 use Zend\EventManager\EventManagerInterface;
@@ -20,7 +19,7 @@ use Zend\Mvc\Application;
 use Zend\Mvc\ApplicationInterface;
 use Zend\Mvc\MvcEvent;
 
-class IdempotentRequestListenerSpec extends ObjectBehavior
+class RequestAlreadyPerfomedListenerSpec extends ObjectBehavior
 {
     function let(IdempotencyService $idempotencyService)
     {
@@ -29,7 +28,7 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(IdempotentRequestListener::class);
+        $this->shouldHaveType(RequestAlreadyPerfomedListener::class);
     }
 
     function it_returns_existing_http_response(
@@ -44,7 +43,7 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
             ->getResponse(Argument::type(ServerRequest::class))
             ->willReturn($psr7Response);
 
-        $this->loadResponse($mvcEvent)->shouldReturnAnInstanceOf(Response::class);
+        $this->__invoke($mvcEvent)->shouldReturnAnInstanceOf(Response::class);
     }
 
     function it_returns_null_when_an_idempotency_exception_is_thrown(
@@ -58,7 +57,7 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
             ->getResponse(Argument::type(ServerRequest::class))
             ->willThrow(new RuntimeException());
 
-        $this->loadResponse($mvcEvent)->shouldReturn(null);
+        $this->__invoke($mvcEvent)->shouldReturn(null);
     }
 
     function it_returns_null_when_an_invalid_request_checksum_exception_is_thrown(
@@ -84,7 +83,7 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
             ->getResponse(Argument::type(ServerRequest::class))
             ->willThrow(new InvalidRequestChecksumException());
 
-        $this->loadResponse($mvcEvent);
+        $this->__invoke($mvcEvent);
     }
 
     function it_returns_null_when_an_invalid_idempotent_key_format_exception_is_thrown(
@@ -110,23 +109,6 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
             ->getResponse(Argument::type(ServerRequest::class))
             ->willThrow(new InvalidIdempotencyKeyFormatException());
 
-        $this->loadResponse($mvcEvent);
-    }
-
-    function it_saves_http_response(
-        MvcEvent $mvcEvent,
-        IdempotencyService $idempotencyService
-    ) {
-        $request = new Request();
-        $response = new Response();
-
-        $mvcEvent->getRequest()->willReturn($request);
-        $mvcEvent->getResponse()->willReturn($response);
-
-        $idempotencyService
-            ->save(Argument::type(ServerRequest::class), Argument::type(PsrResponse::class))
-            ->shouldBeCalled();
-
-        $this->saveResponse($mvcEvent);
+        $this->__invoke($mvcEvent);
     }
 }
