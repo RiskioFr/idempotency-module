@@ -1,5 +1,4 @@
 <?php
-use Symfony\Component\Cache\Adapter\NullAdapter as NullCacheAdapter;
 use Riskio\IdempotencyModule\Container\IdempotentKeyExtractorFactory;
 use Riskio\IdempotencyModule\Container\IdempotentRequestListenerFactory;
 use Riskio\IdempotencyModule\Container\IdempotentRequestServiceFactory;
@@ -12,11 +11,12 @@ use Riskio\IdempotencyModule\ModuleOptions;
 use Riskio\IdempotencyModule\RequestChecksumGenerator;
 use Riskio\IdempotencyModule\Serializer\Serializer;
 use Riskio\IdempotencyModule\Storage\Storage;
+use Symfony\Component\Cache\Adapter\NullAdapter as NullCacheAdapter;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Zend\Validator\NotEmpty as NotEmptyValidator;
 
 return [
-    'idempotency' => [
+    'riskio_idempotency' => [
         'cache' => NullCacheAdapter::class,
         'serializer' => Serializer::class,
         'idempotent_key_validator' => NotEmptyValidator::class,

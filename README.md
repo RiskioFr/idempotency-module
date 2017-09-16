@@ -43,13 +43,14 @@ use Riskio\IdempotencyModule\Serializer\Serializer;
 use Zend\Validator\NotEmpty as NotEmptyValidator;
 
 return [
-    'idempotency' => [
+    'riskio_idempotency' => [
         'cache' => NullCacheAdapter::class,
         'serializer' => Serializer::class,
         'idempotent_key_validator' => NotEmptyValidator::class,
     ],
 ];
 ```
+
 ## Testing
 
 ``` bash
