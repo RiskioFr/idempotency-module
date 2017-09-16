@@ -8,6 +8,12 @@ Zend Framework module ensuring at most once requests for mutating endpoints.
 [![Build Status](https://img.shields.io/travis/RiskioFr/idempotency-module.svg?style=flat-square)](http://travis-ci.org/RiskioFr/idempotency-module)
 [![Total Downloads](http://img.shields.io/packagist/dt/riskio/idempotency-module.svg?style=flat-square)](https://packagist.org/packages/riskio/idempotency-module)
 
+While the inherently idempotent HTTP semantics around PUT and DELETE are a good fit for many API calls, what if we have an operation that needs to be invoked exactly once and no more? An example might be if we were designing an API endpoint to charge a customer money; accidentally calling it twice would lead to the customer being double-charged, which is very bad.
+
+This is where idempotency keys come into play. When performing a request, a client generates a unique ID to identify just that operation and sends it up to the server along with the normal payload. The server receives the ID and correlates it with the state of the request on its end. If the client notices a failure, it retries the request with the same ID, and from there it’s up to the server to figure out what to do with it.
+
+Stripe describes its solution in a [blog post](https://stripe.com/blog/idempotency) which provided the inspiration for this package.
+
 Requirements
 ------------
 
