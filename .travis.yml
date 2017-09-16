@@ -4,13 +4,18 @@ php:
   - 7.0
   - 7.1
 
+env:
+  matrix:
+    - PREFER_LOWEST="--prefer-lowest"
+    - PREFER_LOWEST=""
+
 cache:
   directories:
     - $HOME/.composer/cache
 
 before_script:
   - travis_retry composer self-update
-  - travis_retry composer install --no-interaction --prefer-source
+  - travis_retry composer update --no-interaction --prefer-source $PREFER_LOWEST
   - composer info -i
 
 script:
