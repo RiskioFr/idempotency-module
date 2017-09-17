@@ -1,12 +1,12 @@
 <?php
 use Riskio\IdempotencyModule\Container\IdempotencyKeyExtractorFactory;
 use Riskio\IdempotencyModule\Container\IdempotentRequestListenerFactory;
-use Riskio\IdempotencyModule\Container\IdempotentRequestServiceFactory;
+use Riskio\IdempotencyModule\Container\IdempotencyServiceFactory;
 use Riskio\IdempotencyModule\Container\ModuleOptionsFactory;
 use Riskio\IdempotencyModule\Container\StorageFactory;
 use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
 use Riskio\IdempotencyModule\IdempotentRequestListener;
-use Riskio\IdempotencyModule\IdempotentRequestService;
+use Riskio\IdempotencyModule\IdempotencyService;
 use Riskio\IdempotencyModule\ModuleOptions;
 use Riskio\IdempotencyModule\RequestChecksumGenerator;
 use Riskio\IdempotencyModule\Serializer\Serializer;
@@ -26,7 +26,7 @@ return [
         'factories' => [
             ModuleOptions::class => ModuleOptionsFactory::class,
             IdempotentRequestListener::class => IdempotentRequestListenerFactory::class,
-            IdempotentRequestService::class => IdempotentRequestServiceFactory::class,
+            IdempotencyService::class => IdempotencyServiceFactory::class,
             Storage::class => StorageFactory::class,
             Serializer::class => InvokableFactory::class,
             IdempotencyKeyExtractor::class => IdempotencyKeyExtractorFactory::class,

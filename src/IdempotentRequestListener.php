@@ -18,14 +18,14 @@ class IdempotentRequestListener extends AbstractListenerAggregate
 {
     private $eventManager;
 
-    private $idempotentRequestService;
+    private $idempotencyService;
 
     public function __construct(
         EventManagerInterface $eventManager,
-        IdempotentRequestService $idempotentRequestService
+        IdempotencyService $idempotencyService
     ) {
         $this->eventManager = $eventManager;
-        $this->idempotentRequestService = $idempotentRequestService;
+        $this->idempotencyService = $idempotencyService;
     }
 
     public function attach(EventManagerInterface $events, $priority = 1)
@@ -50,7 +50,7 @@ class IdempotentRequestListener extends AbstractListenerAggregate
         }
 
         try {
-            $psrResponse = $this->idempotentRequestService->getResponse(
+            $psrResponse = $this->idempotencyService->getResponse(
                 Psr7ServerRequest::fromZend($request)
             );
         } catch (InvalidRequestChecksumException $exception) {
@@ -78,7 +78,7 @@ class IdempotentRequestListener extends AbstractListenerAggregate
         }
 
         try {
-            $this->idempotentRequestService->save(
+            $this->idempotencyService->save(
                 Psr7ServerRequest::fromZend($event->getRequest()),
                 Psr7Response::fromZend($event->getResponse())
             );

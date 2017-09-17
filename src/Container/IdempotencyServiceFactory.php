@@ -5,18 +5,18 @@ namespace Riskio\IdempotencyModule\Container;
 
 use Interop\Container\ContainerInterface;
 use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
-use Riskio\IdempotencyModule\IdempotentRequestService;
+use Riskio\IdempotencyModule\IdempotencyService;
 use Riskio\IdempotencyModule\RequestChecksumGenerator;
 use Riskio\IdempotencyModule\Storage\Storage;
 
-final class IdempotentRequestServiceFactory
+final class IdempotencyServiceFactory
 {
-    public function __invoke(ContainerInterface $container) : IdempotentRequestService
+    public function __invoke(ContainerInterface $container) : IdempotencyService
     {
         $requestChecksumGenerator = $container->get(RequestChecksumGenerator::class);
         $storage = $container->get(Storage::class);
         $idempotencyKeyExtractor = $container->get(IdempotencyKeyExtractor::class);
 
-        return new IdempotentRequestService($requestChecksumGenerator, $storage, $idempotencyKeyExtractor);
+        return new IdempotencyService($requestChecksumGenerator, $storage, $idempotencyKeyExtractor);
     }
 }

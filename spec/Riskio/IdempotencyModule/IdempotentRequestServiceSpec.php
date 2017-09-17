@@ -8,13 +8,13 @@ use Prophecy\Argument;
 use Riskio\IdempotencyModule\Exception;
 use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
 use Riskio\IdempotencyModule\IdempotentRequest;
-use Riskio\IdempotencyModule\IdempotentRequestService;
+use Riskio\IdempotencyModule\IdempotencyService;
 use Riskio\IdempotencyModule\Storage\StorageInterface;
 use Riskio\IdempotencyModule\RequestChecksumGeneratorInterface;
 use Zend\Diactoros\Request as HttpRequest;
 use Zend\Diactoros\Response as HttpResponse;
 
-class IdempotentRequestServiceSpec extends ObjectBehavior
+class IdempotencyServiceSpec extends ObjectBehavior
 {
     function let(
         RequestChecksumGeneratorInterface $requestChecksumGenerator,
@@ -26,7 +26,7 @@ class IdempotentRequestServiceSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(IdempotentRequestService::class);
+        $this->shouldHaveType(IdempotencyService::class);
     }
 
     function it_retrieves_http_response_from_request_with_idempotency_key(
@@ -104,7 +104,7 @@ class IdempotentRequestServiceSpec extends ObjectBehavior
     private function createHttpRequestWithItempotencyKey(string $idempotencyKey)
     {
         return $this->createHttpRequest()->withHeader(
-            IdempotentRequestService::IDEMPOTENCY_HEADER,
+            IdempotencyService::IDEMPOTENCY_HEADER,
             $idempotencyKey
         );
     }

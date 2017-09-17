@@ -7,7 +7,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Riskio\IdempotencyModule\Storage\StorageInterface;
 
-class IdempotentRequestService
+class IdempotencyService
 {
     const IDEMPOTENCY_HEADER = 'Idempotency-Key';
 

@@ -17,11 +17,11 @@ class IdempotencyKeyExtractor
 
     public function extract(RequestInterface $request) : string
     {
-        if (!$request->hasHeader(IdempotentRequestService::IDEMPOTENCY_HEADER)) {
+        if (!$request->hasHeader(IdempotencyService::IDEMPOTENCY_HEADER)) {
             throw new Exception\NoIdempotencyKeyException();
         }
 
-        $idempotencyKey = $request->getHeader(IdempotentRequestService::IDEMPOTENCY_HEADER)[0];
+        $idempotencyKey = $request->getHeader(IdempotencyService::IDEMPOTENCY_HEADER)[0];
 
         if (!$this->idempotencyKeyValidator->isValid($idempotencyKey)) {
             throw new Exception\InvalidIdempotencyKeyFormatException();
