@@ -6,15 +6,16 @@ use Faker\Factory as FakerFactory;
 use PhpSpec\ObjectBehavior;
 use Riskio\IdempotencyModule\Exception;
 use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
-use Riskio\IdempotencyModule\IdempotencyService;
 use Zend\Diactoros\Request as HttpRequest;
 use Zend\Validator\ValidatorInterface;
 
 class IdempotencyKeyExtractorSpec extends ObjectBehavior
 {
+    private $idempotencyKeyHeader = 'Idempotency-Key';
+
     function let(ValidatorInterface $idempotencyKeyValidator)
     {
-        $this->beConstructedWith($idempotencyKeyValidator);
+        $this->beConstructedWith($idempotencyKeyValidator, $this->idempotencyKeyHeader);
     }
 
     function it_is_initializable()
@@ -59,7 +60,7 @@ class IdempotencyKeyExtractorSpec extends ObjectBehavior
     private function createHttpRequestWithItempotencyKey(string $idempotencyKey)
     {
         return $this->createHttpRequestWithoutIdempotencyKey()->withHeader(
-            IdempotencyService::IDEMPOTENCY_HEADER,
+            $this->idempotencyKeyHeader,
             $idempotencyKey
         );
     }

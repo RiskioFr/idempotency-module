@@ -27,5 +27,10 @@ return [
          * By default, the module uses UUID format (versions 1 to 5)
          */
         //'idempotency_key_validator' => UuidValidator::class,
+
+        /**
+         * Allow to use custom header for idempotency key.
+         */
+        'idempotency_key_header' => 'Idempotency-Key',
     ],
 ];

@@ -9,19 +9,21 @@ use Zend\Validator\ValidatorInterface;
 class IdempotencyKeyExtractor
 {
     private $idempotencyKeyValidator;
+    private $idempotencyKeyHeader;
 
-    public function __construct(ValidatorInterface $idempotencyKeyValidator)
+    public function __construct(ValidatorInterface $idempotencyKeyValidator, string $idempotencyKeyHeader)
     {
         $this->idempotencyKeyValidator = $idempotencyKeyValidator;
+        $this->idempotencyKeyHeader = $idempotencyKeyHeader;
     }
 
     public function extract(RequestInterface $request) : string
     {
-        if (!$request->hasHeader(IdempotencyService::IDEMPOTENCY_HEADER)) {
+        if (!$request->hasHeader($this->idempotencyKeyHeader)) {
             throw new Exception\NoIdempotencyKeyException();
         }
 
-        $idempotencyKey = $request->getHeader(IdempotencyService::IDEMPOTENCY_HEADER)[0];
+        $idempotencyKey = $request->getHeader($this->idempotencyKeyHeader)[0];
 
         if (!$this->idempotencyKeyValidator->isValid($idempotencyKey)) {
             throw new Exception\InvalidIdempotencyKeyFormatException();

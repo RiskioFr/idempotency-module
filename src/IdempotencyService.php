@@ -9,8 +9,6 @@ use Riskio\IdempotencyModule\Storage\StorageInterface;
 
 class IdempotencyService
 {
-    const IDEMPOTENCY_HEADER = 'Idempotency-Key';
-
     private $requestChecksumGenerator;
     private $idempotentRequestStorage;
     private $idempotencyKeyExtractor;
