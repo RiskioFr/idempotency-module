@@ -5,7 +5,7 @@ namespace spec\Riskio\IdempotencyModule;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Psr\Http\Message\ResponseInterface as PsrResponse;
-use Riskio\IdempotencyModule\Exception\InvalidIdempotentKeyFormatException;
+use Riskio\IdempotencyModule\Exception\InvalidIdempotencyKeyFormatException;
 use Riskio\IdempotencyModule\Exception\InvalidRequestChecksumException;
 use Riskio\IdempotencyModule\Exception\RuntimeException;
 use Riskio\IdempotencyModule\IdempotentRequestListener;
@@ -96,7 +96,7 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
 
         $idempotentRequestService
             ->getResponse(Argument::type(ServerRequest::class))
-            ->willThrow(new InvalidIdempotentKeyFormatException());
+            ->willThrow(new InvalidIdempotencyKeyFormatException());
 
         $this->loadResponse($mvcEvent);
     }

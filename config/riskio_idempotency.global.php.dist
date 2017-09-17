@@ -22,8 +22,8 @@ return [
         'serializer' => Serializer::class,
 
         /**
-         * Allow to configure validator that validates idempotent key format.
+         * Allow to configure validator that validates idempotency key format.
          */
-        'idempotent_key_validator' => NotEmptyValidator::class,
+        'idempotency_key_validator' => NotEmptyValidator::class,
     ],
 ];

@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Riskio\IdempotencyModule;
 
 use Riskio\IdempotencyModule\Exception\ExceptionInterface;
-use Riskio\IdempotencyModule\Exception\InvalidIdempotentKeyFormatException;
+use Riskio\IdempotencyModule\Exception\InvalidIdempotencyKeyFormatException;
 use Riskio\IdempotencyModule\Exception\InvalidRequestChecksumException;
-use Riskio\IdempotencyModule\Exception\NoIdempotentKeyException;
+use Riskio\IdempotencyModule\Exception\NoIdempotencyKeyException;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Http\Request as HttpRequest;
@@ -58,7 +58,7 @@ class IdempotentRequestListener extends AbstractListenerAggregate
             $event->setParam('exception', $exception);
 
             return $this->triggerDispatchErrorEvent($event);
-        } catch (InvalidIdempotentKeyFormatException $exception) {
+        } catch (InvalidIdempotencyKeyFormatException $exception) {
             $event->setError('invalid_idempotent_key_format');
             $event->setParam('exception', $exception);
 
@@ -82,7 +82,7 @@ class IdempotentRequestListener extends AbstractListenerAggregate
                 Psr7ServerRequest::fromZend($event->getRequest()),
                 Psr7Response::fromZend($event->getResponse())
             );
-        } catch (NoIdempotentKeyException $event) {
+        } catch (NoIdempotencyKeyException $event) {
             return;
         }
     }

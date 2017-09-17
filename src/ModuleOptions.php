@@ -11,7 +11,7 @@ class ModuleOptions extends AbstractOptions
 
     private $serializer;
 
-    private $idempotentKeyValidator;
+    private $idempotencyKeyValidator;
 
     public function getCache() : string
     {
@@ -33,13 +33,13 @@ class ModuleOptions extends AbstractOptions
         $this->serializer = $serializer;
     }
 
-    public function getIdempotentKeyValidator() : string
+    public function getIdempotencyKeyValidator() : string
     {
-        return $this->idempotentKeyValidator;
+        return $this->idempotencyKeyValidator;
     }
 
-    public function setIdempotentKeyValidator(string $idempotentKeyValidator)
+    public function setIdempotencyKeyValidator(string $idempotencyKeyValidator)
     {
-        $this->idempotentKeyValidator = $idempotentKeyValidator;
+        $this->idempotencyKeyValidator = $idempotencyKeyValidator;
     }
 }

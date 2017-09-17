@@ -6,7 +6,7 @@ use Faker\Factory as FakerFactory;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Riskio\IdempotencyModule\Exception;
-use Riskio\IdempotencyModule\IdempotentKeyExtractor;
+use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
 use Riskio\IdempotencyModule\IdempotentRequest;
 use Riskio\IdempotencyModule\IdempotentRequestService;
 use Riskio\IdempotencyModule\Storage\StorageInterface;
@@ -19,9 +19,9 @@ class IdempotentRequestServiceSpec extends ObjectBehavior
     function let(
         RequestChecksumGeneratorInterface $requestChecksumGenerator,
         StorageInterface $idempotentRequestStorage,
-        IdempotentKeyExtractor $idempotentKeyExtractor
+        IdempotencyKeyExtractor $idempotencyKeyExtractor
     ) {
-        $this->beConstructedWith($requestChecksumGenerator, $idempotentRequestStorage, $idempotentKeyExtractor);
+        $this->beConstructedWith($requestChecksumGenerator, $idempotentRequestStorage, $idempotencyKeyExtractor);
     }
 
     function it_is_initializable()
@@ -33,23 +33,23 @@ class IdempotentRequestServiceSpec extends ObjectBehavior
         StorageInterface $idempotentRequestStorage,
         RequestChecksumGeneratorInterface $requestChecksumGenerator,
         IdempotentRequest $idempotentRequest,
-        IdempotentKeyExtractor $idempotentKeyExtractor
+        IdempotencyKeyExtractor $idempotencyKeyExtractor
     ) {
         $faker = FakerFactory::create();
-        $idempotentKey = $faker->uuid;
+        $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
 
-        $httpRequest = $this->createHttpRequestWithItempotentKey($idempotentKey);
+        $httpRequest = $this->createHttpRequestWithItempotencyKey($idempotencyKey);
         $httpResponse = new HttpResponse();
 
-        $idempotentRequestStorage->get($idempotentKey)->willReturn($idempotentRequest);
+        $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
 
         $idempotentRequest->getChecksum()->willReturn($checksum);
         $idempotentRequest->getHttpResponse()->willReturn($httpResponse);
 
         $requestChecksumGenerator->generate($httpRequest)->willReturn($checksum);
 
-        $idempotentKeyExtractor->extract($httpRequest)->willReturn($idempotentKey);
+        $idempotencyKeyExtractor->extract($httpRequest)->willReturn($idempotencyKey);
 
         $this->getResponse($httpRequest)->shouldReturnAnInstanceOf(HttpResponse::class);
     }
@@ -58,21 +58,21 @@ class IdempotentRequestServiceSpec extends ObjectBehavior
         StorageInterface $idempotentRequestStorage,
         RequestChecksumGeneratorInterface $requestChecksumGenerator,
         IdempotentRequest $idempotentRequest,
-        IdempotentKeyExtractor $idempotentKeyExtractor
+        IdempotencyKeyExtractor $idempotencyKeyExtractor
     ) {
         $faker = FakerFactory::create();
-        $idempotentKey = $faker->uuid;
+        $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
         $generatedChecksum = $faker->sha1;
 
         $idempotentRequest->getChecksum()->willReturn($checksum);
 
-        $httpRequest = $this->createHttpRequestWithItempotentKey($idempotentKey);
+        $httpRequest = $this->createHttpRequestWithItempotencyKey($idempotencyKey);
 
-        $idempotentRequestStorage->get($idempotentKey)->willReturn($idempotentRequest);
+        $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
         $requestChecksumGenerator->generate($httpRequest)->willReturn($generatedChecksum);
 
-        $idempotentKeyExtractor->extract($httpRequest)->willReturn($idempotentKey);
+        $idempotencyKeyExtractor->extract($httpRequest)->willReturn($idempotencyKey);
 
         $this->shouldThrow(Exception\InvalidRequestChecksumException::class)
             ->duringGetResponse($httpRequest);
@@ -81,31 +81,31 @@ class IdempotentRequestServiceSpec extends ObjectBehavior
     function it_saves_http_response(
         StorageInterface $idempotentRequestStorage,
         RequestChecksumGeneratorInterface $requestChecksumGenerator,
-        IdempotentKeyExtractor $idempotentKeyExtractor
+        IdempotencyKeyExtractor $idempotencyKeyExtractor
     ) {
         $faker = FakerFactory::create();
-        $idempotentKey = $faker->uuid;
+        $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
 
-        $httpRequest = $this->createHttpRequestWithItempotentKey($idempotentKey);
+        $httpRequest = $this->createHttpRequestWithItempotencyKey($idempotencyKey);
         $httpResponse = new HttpResponse();
 
-        $idempotentKeyExtractor->extract($httpRequest)->willReturn($idempotentKey);
+        $idempotencyKeyExtractor->extract($httpRequest)->willReturn($idempotencyKey);
 
         $requestChecksumGenerator->generate($httpRequest)->willReturn($checksum);
 
         $idempotentRequestStorage
-            ->save($idempotentKey, Argument::type(IdempotentRequest::class))
+            ->save($idempotencyKey, Argument::type(IdempotentRequest::class))
             ->shouldBeCalled();
 
         $this->save($httpRequest, $httpResponse);
     }
 
-    private function createHttpRequestWithItempotentKey(string $idempotentKey)
+    private function createHttpRequestWithItempotencyKey(string $idempotencyKey)
     {
         return $this->createHttpRequest()->withHeader(
             IdempotentRequestService::IDEMPOTENCY_HEADER,
-            $idempotentKey
+            $idempotencyKey
         );
     }
 

@@ -7,7 +7,7 @@ use Riskio\IdempotencyModule\IdempotentRequest;
 
 interface StorageInterface
 {
-    public function get(string $idempotentKey) : IdempotentRequest;
+    public function get(string $idempotencyKey) : IdempotentRequest;
 
-    public function save(string $idempotentKey, IdempotentRequest $idempotentRequest);
+    public function save(string $idempotencyKey, IdempotentRequest $idempotentRequest);
 }

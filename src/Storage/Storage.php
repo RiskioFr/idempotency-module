@@ -21,22 +21,22 @@ class Storage implements StorageInterface
         $this->idempotentRequestSerializer = $idempotentRequestSerializer;
     }
 
-    public function get(string $idempotentKey) : IdempotentRequest
+    public function get(string $idempotencyKey) : IdempotentRequest
     {
-        if (!$this->cache->hasItem($idempotentKey)) {
-            throw new Exception\IdempotentKeyNotFoundException();
+        if (!$this->cache->hasItem($idempotencyKey)) {
+            throw new Exception\IdempotencyKeyNotFoundException();
         }
 
-        $item = $this->cache->getItem($idempotentKey);
+        $item = $this->cache->getItem($idempotencyKey);
 
         return $this->idempotentRequestSerializer->unserialize($item->get());
     }
 
-    public function save(string $idempotentKey, IdempotentRequest $idempotentRequest)
+    public function save(string $idempotencyKey, IdempotentRequest $idempotentRequest)
     {
         $serializedIdempotentRequest = $this->idempotentRequestSerializer->serialize($idempotentRequest);
 
-        $item = $this->cache->getItem($idempotentKey);
+        $item = $this->cache->getItem($idempotencyKey);
         $item->set($serializedIdempotentRequest);
 
         $this->cache->save($item);

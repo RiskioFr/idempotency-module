@@ -32,12 +32,12 @@ class StorageSpec extends ObjectBehavior
         IdempotentRequest $idempotentRequest
     ) {
         $faker = FakerFactory::create();
-        $idempotentKey = $faker->uuid;
+        $idempotencyKey = $faker->uuid;
 
         $serializedIdempotentRequest = $faker->sha1;
 
-        $cacheItemPool->hasItem($idempotentKey)->willReturn(true);
-        $cacheItemPool->getItem($idempotentKey)->willReturn($cacheItem);
+        $cacheItemPool->hasItem($idempotencyKey)->willReturn(true);
+        $cacheItemPool->getItem($idempotencyKey)->willReturn($cacheItem);
 
         $cacheItem->get()->willReturn($serializedIdempotentRequest);
 
@@ -45,20 +45,20 @@ class StorageSpec extends ObjectBehavior
             ->unserialize($serializedIdempotentRequest)
             ->willReturn($idempotentRequest);
 
-        $this->get($idempotentKey)->shouldReturnAnInstanceOf(IdempotentRequest::class);
+        $this->get($idempotencyKey)->shouldReturnAnInstanceOf(IdempotentRequest::class);
     }
 
     function it_throws_exception_when_retrieving_idempotent_request_from_non_existing_idempotent_key(
         CacheItemPoolInterface $cacheItemPool
     ) {
         $faker = FakerFactory::create();
-        $idempotentKey = $faker->uuid;
+        $idempotencyKey = $faker->uuid;
 
-        $cacheItemPool->hasItem($idempotentKey)
+        $cacheItemPool->hasItem($idempotencyKey)
             ->willReturn(false);
 
-        $this->shouldThrow(Exception\IdempotentKeyNotFoundException::class)
-            ->duringGet($idempotentKey);
+        $this->shouldThrow(Exception\IdempotencyKeyNotFoundException::class)
+            ->duringGet($idempotencyKey);
     }
 
     function it_saves_idempotent_request(
@@ -68,7 +68,7 @@ class StorageSpec extends ObjectBehavior
         IdempotentRequest $idempotentRequest
     ) {
         $faker = FakerFactory::create();
-        $idempotentKey = $faker->uuid;
+        $idempotencyKey = $faker->uuid;
 
         $serializedIdempotentRequest = $faker->sha1;
 
@@ -76,11 +76,11 @@ class StorageSpec extends ObjectBehavior
             ->serialize($idempotentRequest)
             ->willReturn($serializedIdempotentRequest);
 
-        $cacheItemPool->getItem($idempotentKey)->willReturn($cacheItem);
+        $cacheItemPool->getItem($idempotencyKey)->willReturn($cacheItem);
         $cacheItemPool->save($cacheItem)->willReturn(null);
 
         $cacheItem->set($serializedIdempotentRequest);
 
-        $this->save($idempotentKey, $idempotentRequest);
+        $this->save($idempotencyKey, $idempotentRequest);
     }
 }

@@ -13,22 +13,22 @@ class IdempotentRequestService
 
     private $requestChecksumGenerator;
     private $idempotentRequestStorage;
-    private $idempotentKeyExtractor;
+    private $idempotencyKeyExtractor;
 
     public function __construct(
         RequestChecksumGeneratorInterface $requestChecksumGenerator,
         StorageInterface $idempotentRequestStorage,
-        IdempotentKeyExtractor $idempotentKeyExtractor
+        IdempotencyKeyExtractor $idempotencyKeyExtractor
     ) {
         $this->requestChecksumGenerator = $requestChecksumGenerator;
         $this->idempotentRequestStorage = $idempotentRequestStorage;
-        $this->idempotentKeyExtractor = $idempotentKeyExtractor;
+        $this->idempotencyKeyExtractor = $idempotencyKeyExtractor;
     }
 
     public function getResponse(RequestInterface $request) : ResponseInterface
     {
-        $idempotentKey = $this->idempotentKeyExtractor->extract($request);
-        $idempotentRequest = $this->idempotentRequestStorage->get($idempotentKey);
+        $idempotencyKey = $this->idempotencyKeyExtractor->extract($request);
+        $idempotentRequest = $this->idempotentRequestStorage->get($idempotencyKey);
 
         $checksum = $this->requestChecksumGenerator->generate($request);
 
@@ -41,11 +41,11 @@ class IdempotentRequestService
 
     public function save(RequestInterface $request, ResponseInterface $response)
     {
-        $idempotentKey = $this->idempotentKeyExtractor->extract($request);
+        $idempotencyKey = $this->idempotencyKeyExtractor->extract($request);
 
         $checksum = $this->requestChecksumGenerator->generate($request);
         $idempotentRequest = new IdempotentRequest($checksum, $response);
 
-        $this->idempotentRequestStorage->save($idempotentKey, $idempotentRequest);
+        $this->idempotentRequestStorage->save($idempotencyKey, $idempotentRequest);
     }
 }

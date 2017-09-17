@@ -6,25 +6,25 @@ namespace Riskio\IdempotencyModule;
 use Psr\Http\Message\RequestInterface;
 use Zend\Validator\ValidatorInterface;
 
-class IdempotentKeyExtractor
+class IdempotencyKeyExtractor
 {
-    private $idempotentKeyValidator;
+    private $idempotencyKeyValidator;
 
-    public function __construct(ValidatorInterface $idempotentKeyValidator)
+    public function __construct(ValidatorInterface $idempotencyKeyValidator)
     {
-        $this->idempotentKeyValidator = $idempotentKeyValidator;
+        $this->idempotencyKeyValidator = $idempotencyKeyValidator;
     }
 
     public function extract(RequestInterface $request) : string
     {
         if (!$request->hasHeader(IdempotentRequestService::IDEMPOTENCY_HEADER)) {
-            throw new Exception\NoIdempotentKeyException();
+            throw new Exception\NoIdempotencyKeyException();
         }
 
         $idempotencyKey = $request->getHeader(IdempotentRequestService::IDEMPOTENCY_HEADER)[0];
 
-        if (!$this->idempotentKeyValidator->isValid($idempotencyKey)) {
-            throw new Exception\InvalidIdempotentKeyFormatException();
+        if (!$this->idempotencyKeyValidator->isValid($idempotencyKey)) {
+            throw new Exception\InvalidIdempotencyKeyFormatException();
         }
 
         return $idempotencyKey;

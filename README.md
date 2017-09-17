@@ -50,7 +50,7 @@ return [
     'riskio_idempotency' => [
         'cache' => NullCacheAdapter::class,
         'serializer' => Serializer::class,
-        'idempotent_key_validator' => NotEmptyValidator::class,
+        'idempotency_key_validator' => NotEmptyValidator::class,
     ],
 ];
 ```
