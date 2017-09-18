@@ -12,6 +12,6 @@ class ModuleOptionsFactory
     {
         $options = $container->get('config');
 
-        return new ModuleOptions($options['idempotency']);
+        return new ModuleOptions($options['riskio_idempotency']);
     }
 }
