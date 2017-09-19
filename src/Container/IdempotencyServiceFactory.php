@@ -6,6 +6,7 @@ namespace Riskio\IdempotencyModule\Container;
 use Interop\Container\ContainerInterface;
 use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
 use Riskio\IdempotencyModule\IdempotencyService;
+use Riskio\IdempotencyModule\ModuleOptions;
 use Riskio\IdempotencyModule\RequestChecksumGenerator;
 use Riskio\IdempotencyModule\Storage\Storage;
 
@@ -17,6 +18,14 @@ final class IdempotencyServiceFactory
         $storage = $container->get(Storage::class);
         $idempotencyKeyExtractor = $container->get(IdempotencyKeyExtractor::class);
 
-        return new IdempotencyService($requestChecksumGenerator, $storage, $idempotencyKeyExtractor);
+        /* @var $moduleOptions ModuleOptions */
+        $moduleOptions = $container->get(ModuleOptions::class);
+
+        return new IdempotencyService(
+            $requestChecksumGenerator,
+            $storage,
+            $idempotencyKeyExtractor,
+            $moduleOptions->getHttpMethods()
+        );
     }
 }

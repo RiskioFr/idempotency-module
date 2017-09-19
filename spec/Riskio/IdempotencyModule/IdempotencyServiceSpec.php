@@ -21,7 +21,14 @@ class IdempotencyServiceSpec extends ObjectBehavior
         StorageInterface $idempotentRequestStorage,
         IdempotencyKeyExtractor $idempotencyKeyExtractor
     ) {
-        $this->beConstructedWith($requestChecksumGenerator, $idempotentRequestStorage, $idempotencyKeyExtractor);
+        $httpMethods = ['POST'];
+
+        $this->beConstructedWith(
+            $requestChecksumGenerator,
+            $idempotentRequestStorage,
+            $idempotencyKeyExtractor,
+            $httpMethods
+        );
     }
 
     function it_is_initializable()
@@ -52,6 +59,41 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $idempotencyKeyExtractor->extract($httpRequest)->willReturn($idempotencyKey);
 
         $this->getResponse($httpRequest)->shouldReturnAnInstanceOf(HttpResponse::class);
+    }
+
+    function it_throws_exception_when_retrieving_http_response_from_http_request_without_eligible_method(
+        StorageInterface $idempotentRequestStorage,
+        RequestChecksumGeneratorInterface $requestChecksumGenerator,
+        IdempotentRequest $idempotentRequest,
+        IdempotencyKeyExtractor $idempotencyKeyExtractor
+    ) {
+        $httpMethods = [];
+
+        $this->beConstructedWith(
+            $requestChecksumGenerator,
+            $idempotentRequestStorage,
+            $idempotencyKeyExtractor,
+            $httpMethods
+        );
+
+        $faker = FakerFactory::create();
+        $idempotencyKey = $faker->uuid;
+        $checksum = $faker->sha1;
+
+        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpResponse = new HttpResponse();
+
+        $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
+
+        $idempotentRequest->getChecksum()->willReturn($checksum);
+        $idempotentRequest->getHttpResponse()->willReturn($httpResponse);
+
+        $requestChecksumGenerator->generate($httpRequest)->willReturn($checksum);
+
+        $idempotencyKeyExtractor->extract($httpRequest)->willReturn($idempotencyKey);
+
+        $this->shouldThrow(Exception\NotEligibleHttpMethodException::class)
+            ->duringGetResponse($httpRequest);
     }
 
     function it_throws_exception_when_retrieving_http_response_from_not_consistent_http_request_with_idempotent_key(
@@ -97,6 +139,33 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $idempotentRequestStorage
             ->save($idempotencyKey, Argument::type(IdempotentRequest::class))
             ->shouldBeCalled();
+
+        $this->save($httpRequest, $httpResponse);
+    }
+
+    function it_does_not_save_http_response_from_http_request_without_eligible_method(
+        StorageInterface $idempotentRequestStorage,
+        RequestChecksumGeneratorInterface $requestChecksumGenerator,
+        IdempotencyKeyExtractor $idempotencyKeyExtractor
+    ) {
+        $httpMethods = [];
+
+        $this->beConstructedWith(
+            $requestChecksumGenerator,
+            $idempotentRequestStorage,
+            $idempotencyKeyExtractor,
+            $httpMethods
+        );
+
+        $faker = FakerFactory::create();
+        $idempotencyKey = $faker->uuid;
+
+        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpResponse = new HttpResponse();
+
+        $idempotentRequestStorage
+            ->save($idempotencyKey, Argument::type(IdempotentRequest::class))
+            ->shouldNotBeCalled();
 
         $this->save($httpRequest, $httpResponse);
     }

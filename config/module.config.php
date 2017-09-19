@@ -21,6 +21,7 @@ return [
         'serializer' => Serializer::class,
         'idempotency_key_validator' => UuidValidator::class,
         'idempotency_key_header' => 'Idempotency-Key',
+        'http_methods' => ['POST', 'PATCH'],
     ],
 
     'service_manager' => [

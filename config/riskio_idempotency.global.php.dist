@@ -32,5 +32,10 @@ return [
          * Allow to use custom header for idempotency key.
          */
         'idempotency_key_header' => 'Idempotency-Key',
+
+        /**
+         * Allow to configure eligible HTTP methods.
+         */
+        'http_methods' => ['POST', 'PATCH'],
     ],
 ];

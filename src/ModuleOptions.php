@@ -7,13 +7,15 @@ use Zend\Stdlib\AbstractOptions;
 
 class ModuleOptions extends AbstractOptions
 {
-    private $cache;
+    private $cache = '';
 
-    private $serializer;
+    private $serializer = '';
 
-    private $idempotencyKeyValidator;
+    private $idempotencyKeyValidator = '';
 
     private $idempotencyKeyHeader;
+
+    private $httpMethods = [];
 
     public function getCache() : string
     {
@@ -53,5 +55,15 @@ class ModuleOptions extends AbstractOptions
     public function setIdempotencyKeyHeader(string $idempotencyKeyHeader)
     {
         $this->idempotencyKeyHeader = $idempotencyKeyHeader;
+    }
+
+    public function getHttpMethods() : array
+    {
+        return $this->httpMethods;
+    }
+
+    public function setHttpMethods(array $httpMethods)
+    {
+        $this->httpMethods = $httpMethods;
     }
 }
