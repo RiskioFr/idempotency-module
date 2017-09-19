@@ -16,15 +16,10 @@ use Zend\Psr7Bridge\Psr7ServerRequest;
 
 class IdempotentRequestListener extends AbstractListenerAggregate
 {
-    private $eventManager;
-
     private $idempotencyService;
 
-    public function __construct(
-        EventManagerInterface $eventManager,
-        IdempotencyService $idempotencyService
-    ) {
-        $this->eventManager = $eventManager;
+    public function __construct(IdempotencyService $idempotencyService)
+    {
         $this->idempotencyService = $idempotencyService;
     }
 
@@ -91,7 +86,8 @@ class IdempotentRequestListener extends AbstractListenerAggregate
     {
         $event->setName(MvcEvent::EVENT_DISPATCH_ERROR);
 
-        $results = $this->eventManager->triggerEvent($event);
+        $eventManager = $event->getApplication()->getEventManager();
+        $results = $eventManager->triggerEvent($event);
 
         $return = $results->last();
         if (!$return) {

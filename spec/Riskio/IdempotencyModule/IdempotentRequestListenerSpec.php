@@ -16,15 +16,15 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ResponseCollection;
 use Zend\Http\Request;
 use Zend\Http\Response;
+use Zend\Mvc\Application;
+use Zend\Mvc\ApplicationInterface;
 use Zend\Mvc\MvcEvent;
 
 class IdempotentRequestListenerSpec extends ObjectBehavior
 {
-    function let(
-        EventManagerInterface $eventManager,
-        IdempotencyService $idempotencyService
-    ) {
-        $this->beConstructedWith($eventManager, $idempotencyService);
+    function let(IdempotencyService $idempotencyService)
+    {
+        $this->beConstructedWith($idempotencyService);
     }
 
     function it_is_initializable()
@@ -62,17 +62,23 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
     }
 
     function it_returns_null_when_an_invalid_request_checksum_exception_is_thrown(
+        ApplicationInterface $application,
         EventManagerInterface $eventManager,
+        MvcEvent $mvcEvent,
         IdempotencyService $idempotencyService
     ) {
         $request = new Request();
+        $result = 'foo';
 
-        $mvcEvent = new MvcEvent();
-        $mvcEvent->setRequest($request);
+        $application->getEventManager()->willReturn($eventManager);
+        $eventManager->triggerEvent($mvcEvent)->willReturn(new ResponseCollection());
 
-        $responseCollection = new ResponseCollection();
-
-        $eventManager->triggerEvent($mvcEvent)->willReturn($responseCollection);
+        $mvcEvent->getRequest()->willReturn($request);
+        $mvcEvent->setError('invalid_request_checksum')->willReturn(null);
+        $mvcEvent->setParam('exception', Argument::type(InvalidRequestChecksumException::class))->willReturn(null);
+        $mvcEvent->setName(MvcEvent::EVENT_DISPATCH_ERROR)->willReturn(null);
+        $mvcEvent->getApplication()->willReturn($application);
+        $mvcEvent->getResult()->willReturn($result);
 
         $idempotencyService
             ->getResponse(Argument::type(ServerRequest::class))
@@ -82,17 +88,23 @@ class IdempotentRequestListenerSpec extends ObjectBehavior
     }
 
     function it_returns_null_when_an_invalid_idempotent_key_format_exception_is_thrown(
+        ApplicationInterface $application,
         EventManagerInterface $eventManager,
+        MvcEvent $mvcEvent,
         IdempotencyService $idempotencyService
     ) {
         $request = new Request();
+        $result = 'foo';
 
-        $mvcEvent = new MvcEvent();
-        $mvcEvent->setRequest($request);
+        $application->getEventManager()->willReturn($eventManager);
+        $eventManager->triggerEvent($mvcEvent)->willReturn(new ResponseCollection());
 
-        $responseCollection = new ResponseCollection();
-
-        $eventManager->triggerEvent($mvcEvent)->willReturn($responseCollection);
+        $mvcEvent->getRequest()->willReturn($request);
+        $mvcEvent->setError('invalid_idempotent_key_format')->willReturn(null);
+        $mvcEvent->setParam('exception', Argument::type(InvalidIdempotencyKeyFormatException::class))->willReturn(null);
+        $mvcEvent->setName(MvcEvent::EVENT_DISPATCH_ERROR)->willReturn(null);
+        $mvcEvent->getApplication()->willReturn($application);
+        $mvcEvent->getResult()->willReturn($result);
 
         $idempotencyService
             ->getResponse(Argument::type(ServerRequest::class))
