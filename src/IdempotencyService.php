@@ -47,7 +47,7 @@ class IdempotencyService
 
     public function save(RequestInterface $request, ResponseInterface $response)
     {
-        if (!$this->hasEligibleHttpMethod($request)) {
+        if (!$this->hasEligibleHttpMethod($request) || !$this->isSuccessfulResponse($response)) {
             return;
         }
 
@@ -57,6 +57,13 @@ class IdempotencyService
         $idempotentRequest = new IdempotentRequest($checksum, $response);
 
         $this->idempotentRequestStorage->save($idempotencyKey, $idempotentRequest);
+    }
+
+    private function isSuccessfulResponse(ResponseInterface $response) : bool
+    {
+        $statusCode = (int) $response->getStatusCode();
+
+        return $statusCode >= 200 && $statusCode < 300;
     }
 
     private function hasEligibleHttpMethod(RequestInterface $request) : bool

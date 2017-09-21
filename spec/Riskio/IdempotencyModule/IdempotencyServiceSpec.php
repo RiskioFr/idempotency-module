@@ -170,6 +170,22 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $this->save($httpRequest, $httpResponse);
     }
 
+    function it_does_not_save_not_successful_http_response(
+        StorageInterface $idempotentRequestStorage
+    ) {
+        $faker = FakerFactory::create();
+        $idempotencyKey = $faker->uuid;
+
+        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpResponse = (new HttpResponse())->withStatus(422);
+
+        $idempotentRequestStorage
+            ->save($idempotencyKey, Argument::type(IdempotentRequest::class))
+            ->shouldNotBeCalled();
+
+        $this->save($httpRequest, $httpResponse);
+    }
+
     private function createHttpRequest()
     {
         return (new HttpRequest('/', 'POST'));
