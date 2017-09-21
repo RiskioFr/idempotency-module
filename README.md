@@ -17,8 +17,15 @@ Stripe describes its solution in a [blog post](https://stripe.com/blog/idempoten
 Requirements
 ------------
 
-* PHP 7.0
-* Zend Framework 3
+* PHP 7.0+
+* [symfony/cache ^3.0](https://github.com/symfony/cache)
+* [zendframework/zend-diactoros ^1.1](https://github.com/zendframework/zend-diactoros)
+* [zendframework/zend-eventmanager ^2.6.3 || ^3.0](https://github.com/zendframework/zend-eventmanager)
+* [zendframework/zend-http ^2.6](https://github.com/zendframework/zend-http)
+* [zendframework/zend-mvc ^3.0](https://github.com/zendframework/zend-mvc)
+* [zendframework/zend-psr7bridge ^1.0](https://github.com/zendframework/zend-psr7bridge)
+* [zendframework/zend-stdlib ^2.7.3 || ^3.0](https://github.com/zendframework/zend-stdlib)
+* [zendframework/zend-validator ^2.0](https://github.com/zendframework/zend-validator)
 
 Installation
 ------------
