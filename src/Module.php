@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Riskio\IdempotencyModule;
 
+use Riskio\IdempotencyModule\Listener;
 use Zend\Http\Request as HttpRequest;
 use Zend\Mvc\MvcEvent;
 
@@ -17,7 +18,8 @@ class Module
             $container = $app->getServiceManager();
             $eventManager = $app->getEventManager();
 
-            $container->get(IdempotentRequestListener::class)->attach($eventManager);
+            $container->get(Listener\RequestAlreadyPerfomedListener::class)->attach($eventManager);
+            $container->get(Listener\SaveIdempotentRequestListener::class)->attach($eventManager);
         }
     }
 

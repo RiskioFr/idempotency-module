@@ -1,12 +1,14 @@
 <?php
 use Riskio\IdempotencyModule\Container\IdempotencyKeyExtractorFactory;
-use Riskio\IdempotencyModule\Container\IdempotentRequestListenerFactory;
 use Riskio\IdempotencyModule\Container\IdempotencyServiceFactory;
 use Riskio\IdempotencyModule\Container\ModuleOptionsFactory;
+use Riskio\IdempotencyModule\Container\RequestAlreadyPerfomedListenerFactory;
+use Riskio\IdempotencyModule\Container\SaveIdempotentRequestListenerFactory;
 use Riskio\IdempotencyModule\Container\StorageFactory;
 use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
-use Riskio\IdempotencyModule\IdempotentRequestListener;
 use Riskio\IdempotencyModule\IdempotencyService;
+use Riskio\IdempotencyModule\Listener\RequestAlreadyPerfomedListener;
+use Riskio\IdempotencyModule\Listener\SaveIdempotentRequestListener;
 use Riskio\IdempotencyModule\ModuleOptions;
 use Riskio\IdempotencyModule\RequestChecksumGenerator;
 use Riskio\IdempotencyModule\Serializer\Serializer;
@@ -26,7 +28,8 @@ return [
     'service_manager' => [
         'factories' => [
             ModuleOptions::class => ModuleOptionsFactory::class,
-            IdempotentRequestListener::class => IdempotentRequestListenerFactory::class,
+            RequestAlreadyPerfomedListener::class => RequestAlreadyPerfomedListenerFactory::class,
+            SaveIdempotentRequestListener::class => SaveIdempotentRequestListenerFactory::class,
             IdempotencyService::class => IdempotencyServiceFactory::class,
             Storage::class => StorageFactory::class,
             Serializer::class => InvokableFactory::class,
