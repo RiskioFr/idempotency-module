@@ -39,7 +39,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
 
-        $httpRequest = $this->createHttpRequestWithItempotencyKey($idempotencyKey);
+        $httpRequest = $this->createHttpRequest($idempotencyKey);
         $httpResponse = new HttpResponse();
 
         $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
@@ -67,7 +67,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
 
         $idempotentRequest->getChecksum()->willReturn($checksum);
 
-        $httpRequest = $this->createHttpRequestWithItempotencyKey($idempotencyKey);
+        $httpRequest = $this->createHttpRequest($idempotencyKey);
 
         $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
         $requestChecksumGenerator->generate($httpRequest)->willReturn($generatedChecksum);
@@ -87,7 +87,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
 
-        $httpRequest = $this->createHttpRequestWithItempotencyKey($idempotencyKey);
+        $httpRequest = $this->createHttpRequest($idempotencyKey);
         $httpResponse = new HttpResponse();
 
         $idempotencyKeyExtractor->extract($httpRequest)->willReturn($idempotencyKey);
@@ -99,14 +99,6 @@ class IdempotencyServiceSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->save($httpRequest, $httpResponse);
-    }
-
-    private function createHttpRequestWithItempotencyKey(string $idempotencyKey)
-    {
-        return $this->createHttpRequest()->withHeader(
-            IdempotencyService::IDEMPOTENCY_HEADER,
-            $idempotencyKey
-        );
     }
 
     private function createHttpRequest()

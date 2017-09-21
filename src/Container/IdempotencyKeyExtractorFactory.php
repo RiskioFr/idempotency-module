@@ -16,6 +16,6 @@ final class IdempotencyKeyExtractorFactory
 
         $idempotencyKeyValidator = $container->get($moduleOptions->getIdempotencyKeyValidator());
 
-        return new IdempotencyKeyExtractor($idempotencyKeyValidator);
+        return new IdempotencyKeyExtractor($idempotencyKeyValidator, $moduleOptions->getIdempotencyKeyHeader());
     }
 }

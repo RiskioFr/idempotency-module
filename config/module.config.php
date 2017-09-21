@@ -20,6 +20,7 @@ return [
         'cache' => NullCacheAdapter::class,
         'serializer' => Serializer::class,
         'idempotency_key_validator' => UuidValidator::class,
+        'idempotency_key_header' => 'Idempotency-Key',
     ],
 
     'service_manager' => [

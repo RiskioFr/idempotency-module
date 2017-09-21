@@ -13,6 +13,8 @@ class ModuleOptions extends AbstractOptions
 
     private $idempotencyKeyValidator;
 
+    private $idempotencyKeyHeader;
+
     public function getCache() : string
     {
         return $this->cache;
@@ -41,5 +43,15 @@ class ModuleOptions extends AbstractOptions
     public function setIdempotencyKeyValidator(string $idempotencyKeyValidator)
     {
         $this->idempotencyKeyValidator = $idempotencyKeyValidator;
+    }
+
+    public function getIdempotencyKeyHeader() : string
+    {
+        return $this->idempotencyKeyHeader;
+    }
+
+    public function setIdempotencyKeyHeader(string $idempotencyKeyHeader)
+    {
+        $this->idempotencyKeyHeader = $idempotencyKeyHeader;
     }
 }
