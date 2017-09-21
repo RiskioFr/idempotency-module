@@ -13,13 +13,13 @@ use Riskio\IdempotencyModule\Serializer\Serializer;
 use Riskio\IdempotencyModule\Storage\Storage;
 use Symfony\Component\Cache\Adapter\NullAdapter as NullCacheAdapter;
 use Zend\ServiceManager\Factory\InvokableFactory;
-use Zend\Validator\NotEmpty as NotEmptyValidator;
+use Zend\Validator\Uuid as UuidValidator;
 
 return [
     'riskio_idempotency' => [
         'cache' => NullCacheAdapter::class,
         'serializer' => Serializer::class,
-        'idempotency_key_validator' => NotEmptyValidator::class,
+        'idempotency_key_validator' => UuidValidator::class,
     ],
 
     'service_manager' => [
@@ -32,7 +32,7 @@ return [
             IdempotencyKeyExtractor::class => IdempotencyKeyExtractorFactory::class,
             RequestChecksumGenerator::class => InvokableFactory::class,
             NullCacheAdapter::class => InvokableFactory::class,
-            NotEmptyValidator::class => InvokableFactory::class,
+            UuidValidator::class => InvokableFactory::class,
         ],
     ],
 ];

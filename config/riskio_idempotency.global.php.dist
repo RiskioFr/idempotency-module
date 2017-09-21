@@ -7,23 +7,25 @@
 
 use Symfony\Component\Cache\Adapter\NullAdapter as NullCacheAdapter;
 use Riskio\IdempotencyModule\Serializer\Serializer;
-use Zend\Validator\NotEmpty as NotEmptyValidator;
+use Zend\Validator\Uuid as UuidValidator;
 
 return [
     'riskio_idempotency' => [
         /**
          * Allow to configure PSR-6 cache implementation.
          */
-        'cache' => NullCacheAdapter::class,
+        //'cache' => NullCacheAdapter::class,
 
         /**
          * Allow to configure serializer that serializes/unserializes cached data.
          */
-        'serializer' => Serializer::class,
+        //'serializer' => Serializer::class,
 
         /**
          * Allow to configure validator that validates idempotency key format.
+         *
+         * By default, the module uses UUID format (versions 1 to 5)
          */
-        'idempotency_key_validator' => NotEmptyValidator::class,
+        //'idempotency_key_validator' => UuidValidator::class,
     ],
 ];

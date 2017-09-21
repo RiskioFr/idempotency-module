@@ -51,13 +51,13 @@ Default configuration
 <?php
 use Symfony\Component\Cache\Adapter\NullAdapter as NullCacheAdapter;
 use Riskio\IdempotencyModule\Serializer\Serializer;
-use Zend\Validator\NotEmpty as NotEmptyValidator;
+use Zend\Validator\Uuid as UuidValidator;
 
 return [
     'riskio_idempotency' => [
         'cache' => NullCacheAdapter::class,
         'serializer' => Serializer::class,
-        'idempotency_key_validator' => NotEmptyValidator::class,
+        'idempotency_key_validator' => UuidValidator::class,
     ],
 ];
 ```
