@@ -33,6 +33,20 @@ class IdempotencyService
             throw new NotEligibleHttpMethodException();
         }
 
+        $idempotentRequest = $this->getItempotentRequest($request);
+
+        return $idempotentRequest->getHttpResponse();
+    }
+
+    public function save(RequestInterface $request, ResponseInterface $response)
+    {
+        if ($this->hasEligibleHttpMethod($request) && $this->isSuccessfulResponse($response)) {
+            $this->saveIdempotentRequest($request, $response);
+        }
+    }
+
+    private function getItempotentRequest(RequestInterface $request) : IdempotentRequest
+    {
         $idempotencyKey = $this->idempotencyKeyExtractor->extract($request);
         $idempotentRequest = $this->idempotentRequestStorage->get($idempotencyKey);
 
@@ -42,21 +56,22 @@ class IdempotencyService
             throw new Exception\InvalidRequestChecksumException();
         }
 
-        return $idempotentRequest->getHttpResponse();
+        return $idempotentRequest;
     }
 
-    public function save(RequestInterface $request, ResponseInterface $response)
+    private function saveIdempotentRequest(RequestInterface $request, ResponseInterface $response)
     {
-        if (!$this->hasEligibleHttpMethod($request) || !$this->isSuccessfulResponse($response)) {
-            return;
-        }
-
         $idempotencyKey = $this->idempotencyKeyExtractor->extract($request);
-
-        $checksum = $this->requestChecksumGenerator->generate($request);
-        $idempotentRequest = new IdempotentRequest($checksum, $response);
+        $idempotentRequest = $this->createItempotentRequest($request, $response);
 
         $this->idempotentRequestStorage->save($idempotencyKey, $idempotentRequest);
+    }
+
+    private function createItempotentRequest(RequestInterface $request, ResponseInterface $response) : IdempotentRequest
+    {
+        $checksum = $this->requestChecksumGenerator->generate($request);
+
+        return new IdempotentRequest($checksum, $response);
     }
 
     private function isSuccessfulResponse(ResponseInterface $response) : bool
