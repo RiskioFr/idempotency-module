@@ -21,14 +21,14 @@ class Serializer implements SerializerInterface
 
     public function serialize(IdempotentRequest $idempotentRequest) : string
     {
-        $result = json_encode([
+        $result = \json_encode([
             'checksum' => $idempotentRequest->getChecksum(),
             'response' => HttpResponseSerializer::toString(
                 $idempotentRequest->getHttpResponse()
             ),
         ]);
 
-        $lastJsonError = json_last_error();
+        $lastJsonError = \json_last_error();
 
         if ($lastJsonError !== JSON_ERROR_NONE) {
             throw SerializationFailedException::createFromErrorMessage(
@@ -41,9 +41,9 @@ class Serializer implements SerializerInterface
 
     public function unserialize(string $idempotentRequest) : IdempotentRequest
     {
-        $result = json_decode($idempotentRequest, true);
+        $result = \json_decode($idempotentRequest, true);
 
-        $lastJsonError = json_last_error();
+        $lastJsonError = \json_last_error();
 
         if ($lastJsonError !== JSON_ERROR_NONE) {
             throw UnserializationFailedException::createFromErrorMessage(
