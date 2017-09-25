@@ -83,6 +83,6 @@ class IdempotencyService
 
     private function hasEligibleHttpMethod(RequestInterface $request) : bool
     {
-        return in_array($request->getMethod(), $this->httpMethods);
+        return \in_array($request->getMethod(), $this->httpMethods);
     }
 }

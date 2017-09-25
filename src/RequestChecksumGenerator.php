@@ -10,6 +10,6 @@ class RequestChecksumGenerator implements RequestChecksumGeneratorInterface
 {
     public function generate(RequestInterface $request) : string
     {
-        return sha1(HttpRequestSerializer::toString($request));
+        return \sha1(HttpRequestSerializer::toString($request));
     }
 }
