@@ -39,7 +39,7 @@ class IdempotencyKeyExtractorSpec extends ObjectBehavior
     {
         $httpRequest = $this->createHttpRequestWithoutIdempotencyKey();
 
-        $this->shouldThrow(Exception\NoIdempotencyKeyException::class)
+        $this->shouldThrow(Exception\NoIdempotencyKeyHeaderException::class)
             ->duringExtract($httpRequest);
     }
 
