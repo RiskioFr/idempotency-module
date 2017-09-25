@@ -10,6 +10,7 @@ class ConfigProvider
         $config = (new Module())->getConfig();
 
         return [
+            'riskio_idempotency' => $config['riskio_idempotency'],
             'dependencies' => $config['service_manager'],
         ];
     }
