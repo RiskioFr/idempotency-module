@@ -36,5 +36,11 @@
         "psr-4": {
             "Riskio\\IdempotencyModule\\": "src/"
         }
+    },
+    "extra": {
+        "zf": {
+            "config-provider": "Riskio\\IdempotencyModule\\ConfigProvider",
+            "module": "Riskio\\IdempotencyModule\\Module"
+        }
     }
 }
