@@ -37,11 +37,26 @@ You can install the module from command line:
 $ composer require riskio/idempotency-module
 ```
 
-After installation of the package, you need to complete the following steps:
-
- 1. Enable the module by adding `Riskio\IdempotencyModule` in your `application.config.php` file.
- 2. Copy the `riskio_idempotency.global.php.dist` (you can find this file in the `config` folder of the module) into
+After installation of the package, you have to copy the `riskio_idempotency.global.php.dist` file into
 your `config/autoload` folder and apply any setting you want.
+
+- source: `vendor/riskio/idempotency-module/config/riskio_idempotency.global.php.dist`
+- destination: `config/autoload/riskio_idempotency.global.php`
+
+### Zend Framework
+
+In Zend Framework application, you must enable the module by adding `Riskio\IdempotencyModule` in your `application.config.php` file.
+
+### Zend Expressive
+
+In Zend Expressive application, you must add the `Riskio\IdempotencyModule\IdempotencyMiddleware` middleware in `config/pipeline.php` file at the very first pipeline records.
+
+```php
+<?php
+use Riskio\IdempotencyModule\IdempotencyMiddleware;
+
+$app->pipe(IdempotencyMiddleware::class);
+```
 
 ## Documentation
 

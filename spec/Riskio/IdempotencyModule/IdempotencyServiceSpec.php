@@ -46,7 +46,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
 
-        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpRequest = $this->createHttpRequest();
         $httpResponse = new HttpResponse();
 
         $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
@@ -80,7 +80,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
 
-        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpRequest = $this->createHttpRequest();
         $httpResponse = new HttpResponse();
 
         $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
@@ -109,7 +109,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
 
         $idempotentRequest->getChecksum()->willReturn($checksum);
 
-        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpRequest = $this->createHttpRequest();
 
         $idempotentRequestStorage->get($idempotencyKey)->willReturn($idempotentRequest);
         $requestChecksumGenerator->generate($httpRequest)->willReturn($generatedChecksum);
@@ -129,7 +129,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $idempotencyKey = $faker->uuid;
         $checksum = $faker->sha1;
 
-        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpRequest = $this->createHttpRequest();
         $httpResponse = new HttpResponse();
 
         $idempotencyKeyExtractor->extract($httpRequest)->willReturn($idempotencyKey);
@@ -160,7 +160,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $faker = FakerFactory::create();
         $idempotencyKey = $faker->uuid;
 
-        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpRequest = $this->createHttpRequest();
         $httpResponse = new HttpResponse();
 
         $idempotentRequestStorage
@@ -176,7 +176,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $faker = FakerFactory::create();
         $idempotencyKey = $faker->uuid;
 
-        $httpRequest = $this->createHttpRequest($idempotencyKey);
+        $httpRequest = $this->createHttpRequest();
         $httpResponse = (new HttpResponse())->withStatus(422);
 
         $idempotentRequestStorage
@@ -186,7 +186,7 @@ class IdempotencyServiceSpec extends ObjectBehavior
         $this->save($httpRequest, $httpResponse);
     }
 
-    private function createHttpRequest()
+    private function createHttpRequest() : HttpRequest
     {
         return (new HttpRequest('/', 'POST'));
     }

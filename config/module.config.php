@@ -1,5 +1,6 @@
 <?php
 use Riskio\IdempotencyModule\Container\IdempotencyKeyExtractorFactory;
+use Riskio\IdempotencyModule\Container\IdempotencyMiddlewareFactory;
 use Riskio\IdempotencyModule\Container\IdempotencyServiceFactory;
 use Riskio\IdempotencyModule\Container\ModuleOptionsFactory;
 use Riskio\IdempotencyModule\Container\RequestAlreadyPerfomedListenerFactory;
@@ -9,6 +10,7 @@ use Riskio\IdempotencyModule\IdempotencyKeyExtractor;
 use Riskio\IdempotencyModule\IdempotencyService;
 use Riskio\IdempotencyModule\Listener\RequestAlreadyPerfomedListener;
 use Riskio\IdempotencyModule\Listener\SaveIdempotentRequestListener;
+use Riskio\IdempotencyModule\IdempotencyMiddleware;
 use Riskio\IdempotencyModule\ModuleOptions;
 use Riskio\IdempotencyModule\RequestChecksumGenerator;
 use Riskio\IdempotencyModule\Serializer\Serializer;
@@ -38,6 +40,7 @@ return [
             RequestChecksumGenerator::class => InvokableFactory::class,
             NullCacheAdapter::class => InvokableFactory::class,
             UuidValidator::class => InvokableFactory::class,
+            IdempotencyMiddleware::class => IdempotencyMiddlewareFactory::class,
         ],
     ],
 ];
