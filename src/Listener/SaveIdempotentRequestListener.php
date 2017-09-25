@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Riskio\IdempotencyModule\Listener;
 
-use Riskio\IdempotencyModule\Exception\NoIdempotencyKeyException;
+use Riskio\IdempotencyModule\Exception\NoIdempotencyKeyHeaderException;
 use Riskio\IdempotencyModule\IdempotencyService;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
@@ -38,7 +38,7 @@ class SaveIdempotentRequestListener extends AbstractListenerAggregate
                 Psr7ServerRequest::fromZend($event->getRequest()),
                 Psr7Response::fromZend($event->getResponse())
             );
-        } catch (NoIdempotencyKeyException $event) {
+        } catch (NoIdempotencyKeyHeaderException $event) {
             return;
         }
     }

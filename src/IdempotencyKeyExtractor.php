@@ -20,7 +20,7 @@ class IdempotencyKeyExtractor
     public function extract(RequestInterface $request) : string
     {
         if (!$request->hasHeader($this->idempotencyKeyHeader)) {
-            throw new Exception\NoIdempotencyKeyException();
+            throw new Exception\NoIdempotencyKeyHeaderException();
         }
 
         $idempotencyKey = $request->getHeader($this->idempotencyKeyHeader)[0];
