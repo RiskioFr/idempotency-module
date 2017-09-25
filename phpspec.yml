@@ -2,3 +2,4 @@ formatter.name: pretty
 suites:
   idempotent_module:
     namespace: Riskio\IdempotencyModule
+    psr4_prefix: Riskio\IdempotencyModule
