@@ -11,9 +11,8 @@ final class RequestAlreadyPerfomedListenerFactory
 {
     public function __invoke(ContainerInterface $container) : RequestAlreadyPerfomedListener
     {
-        $eventManager = $container->get('EventManager');
         $idempotencyService = $container->get(IdempotencyService::class);
 
-        return new RequestAlreadyPerfomedListener($eventManager, $idempotencyService);
+        return new RequestAlreadyPerfomedListener($idempotencyService);
     }
 }
